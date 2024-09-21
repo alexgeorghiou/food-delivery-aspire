@@ -1,0 +1,28 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.rsuser
+.vs/
+.idea/
+*.swp
+TestResults/
+*.trx
+coverage*.xml
+artifacts/
+
+# Node / web
+node_modules/
+dist/
+web/.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env / OS
+.env
+.env.local
+.DS_Store
+Thumbs.db
