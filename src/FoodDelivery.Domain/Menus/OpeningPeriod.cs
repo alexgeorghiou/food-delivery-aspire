@@ -13,5 +13,5 @@ public sealed record OpeningPeriod(DayOfWeek Day, TimeOnly Opens, TimeOnly Close
         ? TimeSpan.FromDays(1) - (Opens - Closes)
         : Closes - Opens;
 
-    public override string ToString() => $"{Day} {Opens:HH\:mm}-{Closes:HH\:mm}";
+    public override string ToString() => $"{Day} {Opens:HH:mm}-{Closes:HH:mm}";
 }

@@ -5,7 +5,7 @@ namespace FoodDelivery.Domain.Menus;
 /// </summary>
 public sealed class OpeningHours
 {
-    private readonly IReadOnlyList<OpeningPeriod> _periods;
+    private readonly OpeningPeriod[] _periods;
 
     public OpeningHours(IEnumerable<OpeningPeriod> periods)
     {
@@ -34,7 +34,7 @@ public sealed class OpeningHours
     /// </summary>
     public DateTime? NextOpening(DateTime localTime)
     {
-        if (_periods.Count == 0)
+        if (_periods.Length == 0)
         {
             return null;
         }
@@ -91,7 +91,7 @@ public sealed class OpeningHours
         return null;
     }
 
-    private static void EnsureNoOverlap(IReadOnlyList<OpeningPeriod> periods)
+    private static void EnsureNoOverlap(OpeningPeriod[] periods)
     {
         // Project every period onto a minute-of-week line and check neighbours.
         const int minutesPerWeek = 7 * 24 * 60;
