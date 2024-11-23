@@ -24,9 +24,10 @@ public static partial class DatabaseInitializer
 
                 if (!await db.Restaurants.AnyAsync(cancellationToken))
                 {
-                    db.Restaurants.AddRange(SeedData.Restaurants());
+                    var seed = SeedData.Restaurants();
+                    db.Restaurants.AddRange(seed);
                     await db.SaveChangesAsync(cancellationToken);
-                    LogSeeded(logger, SeedData.Restaurants().Count);
+                    LogSeeded(logger, seed.Count);
                 }
 
                 return;
