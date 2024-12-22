@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FoodDelivery.Restaurants.Api.Data;
 using FoodDelivery.Restaurants.Api.Endpoints;
 
@@ -24,6 +25,9 @@ builder.Services.AddOutputCache(options =>
 });
 
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
