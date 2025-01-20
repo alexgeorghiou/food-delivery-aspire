@@ -1,0 +1,23 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- The AppHost is run with dotnet run / F5; the Aspire CLI bundle is optional. -->
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+    <UserSecretsId>7d3c5e0a-4b8f-4f6e-9a51-3c2d1e0f9a8b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoodDelivery.Restaurants.Api\FoodDelivery.Restaurants.Api.csproj" />
+    <ProjectReference Include="..\FoodDelivery.Orders.Api\FoodDelivery.Orders.Api.csproj" />
+    <ProjectReference Include="..\FoodDelivery.Dispatch.Worker\FoodDelivery.Dispatch.Worker.csproj" />
+  </ItemGroup>
+
+</Project>
