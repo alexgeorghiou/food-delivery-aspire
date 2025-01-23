@@ -71,6 +71,9 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options, T
         {
             e.ToTable("order_lines");
             e.HasKey(l => l.Id);
+            // Ids are assigned by the domain; without this EF treats new lines found via the
+            // navigation as existing rows and issues UPDATEs instead of INSERTs.
+            e.Property(l => l.Id).ValueGeneratedNever();
             e.Property(l => l.Name).HasMaxLength(120);
             e.Property(l => l.UnitPrice).HasPrecision(10, 2);
             e.Ignore(l => l.LineTotal);
@@ -80,6 +83,7 @@ public sealed class OrdersDbContext(DbContextOptions<OrdersDbContext> options, T
         {
             e.ToTable("order_status_changes");
             e.HasKey(h => h.Id);
+            e.Property(h => h.Id).ValueGeneratedNever();
             e.Property(h => h.Status).HasConversion<string>().HasMaxLength(32);
             e.Property(h => h.Actor).HasConversion<string>().HasMaxLength(32);
             e.Property(h => h.Note).HasMaxLength(500);
