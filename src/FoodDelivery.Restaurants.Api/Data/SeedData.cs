@@ -12,7 +12,23 @@ public static class SeedData
     public static readonly Guid GreenLeafId = Guid.Parse("3f1c1a52-6a0e-4c1e-9a4a-0d5b6c7e8f04");
     public static readonly Guid NightOwlId = Guid.Parse("3f1c1a52-6a0e-4c1e-9a4a-0d5b6c7e8f05");
 
-    public static IReadOnlyList<Restaurant> Restaurants() =>
+    public static IReadOnlyList<Restaurant> Restaurants()
+    {
+        var restaurants = Build();
+
+        // Menu order (and therefore category order) follows the order items are listed in below.
+        foreach (var restaurant in restaurants)
+        {
+            for (var i = 0; i < restaurant.MenuItems.Count; i++)
+            {
+                restaurant.MenuItems[i].SortOrder = i + 1;
+            }
+        }
+
+        return restaurants;
+    }
+
+    private static List<Restaurant> Build() =>
     [
         new Restaurant
         {
@@ -26,12 +42,12 @@ public static class SeedData
             OpeningPeriods = EveryDay(new TimeOnly(11, 30), new TimeOnly(23, 0)),
             MenuItems =
             [
-                Item("Margherita", "Pizza", 9.50m, "San Marzano tomato, fior di latte, basil", vegetarian: true, sort: 1),
-                Item("Diavola", "Pizza", 12.00m, "Spicy salami, chilli oil, mozzarella", spicy: true, sort: 2),
-                Item("Quattro Formaggi", "Pizza", 12.50m, "Four cheeses, honey drizzle", vegetarian: true, sort: 3),
-                Item("Tagliatelle al Ragu", "Pasta", 13.50m, "Slow-cooked beef and pork ragu", sort: 1),
-                Item("Cacio e Pepe", "Pasta", 11.00m, "Pecorino, black pepper", vegetarian: true, sort: 2),
-                Item("Tiramisu", "Dessert", 6.00m, "Mascarpone, espresso, cocoa", vegetarian: true, sort: 1),
+                Item("Margherita", "Pizza", 9.50m, "San Marzano tomato, fior di latte, basil", vegetarian: true),
+                Item("Diavola", "Pizza", 12.00m, "Spicy salami, chilli oil, mozzarella", spicy: true),
+                Item("Quattro Formaggi", "Pizza", 12.50m, "Four cheeses, honey drizzle", vegetarian: true),
+                Item("Tagliatelle al Ragu", "Pasta", 13.50m, "Slow-cooked beef and pork ragu"),
+                Item("Cacio e Pepe", "Pasta", 11.00m, "Pecorino, black pepper", vegetarian: true),
+                Item("Tiramisu", "Dessert", 6.00m, "Mascarpone, espresso, cocoa", vegetarian: true),
             ],
         },
         new Restaurant
@@ -50,12 +66,12 @@ public static class SeedData
             ],
             MenuItems =
             [
-                Item("Tonkotsu Ramen", "Ramen", 14.50m, "Pork bone broth, chashu, ajitama", sort: 1),
-                Item("Spicy Miso Ramen", "Ramen", 14.00m, "Miso broth, minced pork, chilli", spicy: true, sort: 2),
-                Item("Vegetable Shoyu Ramen", "Ramen", 13.00m, "Soy broth, tofu, greens", vegetarian: true, sort: 3),
-                Item("Chicken Katsu Don", "Donburi", 12.50m, "Panko chicken, egg, rice", sort: 1),
-                Item("Pork Gyoza (6)", "Sides", 6.50m, "Pan-fried dumplings", sort: 1),
-                Item("Edamame", "Sides", 4.00m, "Sea salt", vegetarian: true, sort: 2),
+                Item("Tonkotsu Ramen", "Ramen", 14.50m, "Pork bone broth, chashu, ajitama"),
+                Item("Spicy Miso Ramen", "Ramen", 14.00m, "Miso broth, minced pork, chilli", spicy: true),
+                Item("Vegetable Shoyu Ramen", "Ramen", 13.00m, "Soy broth, tofu, greens", vegetarian: true),
+                Item("Chicken Katsu Don", "Donburi", 12.50m, "Panko chicken, egg, rice"),
+                Item("Pork Gyoza (6)", "Sides", 6.50m, "Pan-fried dumplings"),
+                Item("Edamame", "Sides", 4.00m, "Sea salt", vegetarian: true),
             ],
         },
         new Restaurant
@@ -69,19 +85,19 @@ public static class SeedData
             AveragePrepMinutes = 10,
             OpeningPeriods =
             [
-                .. Weekdays(new TimeOnly(16, 0), new TimeOnly(23, 0)),
+                .. Days(new TimeOnly(16, 0), new TimeOnly(23, 0), DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday),
                 new OpeningPeriodRow { Day = DayOfWeek.Friday, Opens = new TimeOnly(16, 0), Closes = new TimeOnly(3, 0) },
                 new OpeningPeriodRow { Day = DayOfWeek.Saturday, Opens = new TimeOnly(14, 0), Closes = new TimeOnly(3, 0) },
                 new OpeningPeriodRow { Day = DayOfWeek.Sunday, Opens = new TimeOnly(14, 0), Closes = new TimeOnly(22, 0) },
             ],
             MenuItems =
             [
-                Item("Al Pastor Tacos (3)", "Tacos", 10.50m, "Marinated pork, pineapple, salsa verde", sort: 1),
-                Item("Baja Fish Tacos (3)", "Tacos", 11.50m, "Beer-battered fish, chipotle mayo", sort: 2),
-                Item("Mushroom Tacos (3)", "Tacos", 9.50m, "Roasted mushrooms, pickled onion", vegetarian: true, sort: 3),
-                Item("Burrito Grande", "Burritos", 12.00m, "Beef, rice, beans, cheese, habanero", spicy: true, sort: 1),
-                Item("Nachos", "Sides", 7.00m, "Cheese, jalapeno, guacamole", vegetarian: true, sort: 1),
-                Item("Churros", "Dessert", 5.00m, "Cinnamon sugar, chocolate dip", vegetarian: true, sort: 1),
+                Item("Al Pastor Tacos (3)", "Tacos", 10.50m, "Marinated pork, pineapple, salsa verde"),
+                Item("Baja Fish Tacos (3)", "Tacos", 11.50m, "Beer-battered fish, chipotle mayo"),
+                Item("Mushroom Tacos (3)", "Tacos", 9.50m, "Roasted mushrooms, pickled onion", vegetarian: true),
+                Item("Burrito Grande", "Burritos", 12.00m, "Beef, rice, beans, cheese, habanero", spicy: true),
+                Item("Nachos", "Sides", 7.00m, "Cheese, jalapeno, guacamole", vegetarian: true),
+                Item("Churros", "Dessert", 5.00m, "Cinnamon sugar, chocolate dip", vegetarian: true),
             ],
         },
         new Restaurant
@@ -96,10 +112,10 @@ public static class SeedData
             OpeningPeriods = EveryDay(new TimeOnly(8, 0), new TimeOnly(20, 0)),
             MenuItems =
             [
-                Item("Buddha Bowl", "Bowls", 11.50m, "Quinoa, roasted veg, tahini", vegetarian: true, sort: 1),
-                Item("Spicy Tofu Bowl", "Bowls", 12.00m, "Gochujang tofu, rice, kimchi", vegetarian: true, spicy: true, sort: 2),
-                Item("Falafel Wrap", "Wraps", 9.00m, "Falafel, hummus, pickles", vegetarian: true, sort: 1),
-                Item("Green Smoothie", "Drinks", 5.50m, "Spinach, mango, banana", vegetarian: true, sort: 1),
+                Item("Buddha Bowl", "Bowls", 11.50m, "Quinoa, roasted veg, tahini", vegetarian: true),
+                Item("Spicy Tofu Bowl", "Bowls", 12.00m, "Gochujang tofu, rice, kimchi", vegetarian: true, spicy: true),
+                Item("Falafel Wrap", "Wraps", 9.00m, "Falafel, hummus, pickles", vegetarian: true),
+                Item("Green Smoothie", "Drinks", 5.50m, "Spinach, mango, banana", vegetarian: true),
             ],
         },
         new Restaurant
@@ -114,11 +130,11 @@ public static class SeedData
             OpeningPeriods = EveryDay(new TimeOnly(0, 0), new TimeOnly(0, 0)),
             MenuItems =
             [
-                Item("Dan Dan Noodles", "Noodles", 11.00m, "Sichuan pepper, minced pork, chilli oil", spicy: true, sort: 1),
-                Item("Beef Brisket Noodle Soup", "Noodles", 13.00m, "Slow-braised brisket, clear broth", sort: 2),
-                Item("Garlic Bok Choy", "Sides", 5.50m, "Wok-fried greens", vegetarian: true, sort: 1),
-                Item("Pork Bao (2)", "Sides", 6.00m, "Steamed buns, hoisin", sort: 2),
-                Item("Sesame Balls", "Dessert", 4.50m, "Red bean filling", vegetarian: true, sort: 1),
+                Item("Dan Dan Noodles", "Noodles", 11.00m, "Sichuan pepper, minced pork, chilli oil", spicy: true),
+                Item("Beef Brisket Noodle Soup", "Noodles", 13.00m, "Slow-braised brisket, clear broth"),
+                Item("Garlic Bok Choy", "Sides", 5.50m, "Wok-fried greens", vegetarian: true),
+                Item("Pork Bao (2)", "Sides", 6.00m, "Steamed buns, hoisin"),
+                Item("Sesame Balls", "Dessert", 4.50m, "Red bean filling", vegetarian: true),
             ],
         },
     ];
@@ -132,8 +148,11 @@ public static class SeedData
             .Select(d => new OpeningPeriodRow { Day = d, Opens = opens, Closes = closes })
             .ToList();
 
+    private static List<OpeningPeriodRow> Days(TimeOnly opens, TimeOnly closes, params DayOfWeek[] days) =>
+        days.Select(d => new OpeningPeriodRow { Day = d, Opens = opens, Closes = closes }).ToList();
+
     private static MenuItem Item(string name, string category, decimal price, string description,
-        bool vegetarian = false, bool spicy = false, int sort = 0) => new()
+        bool vegetarian = false, bool spicy = false) => new()
     {
         Id = DeterministicId(name),
         Name = name,
@@ -142,7 +161,6 @@ public static class SeedData
         Description = description,
         IsVegetarian = vegetarian,
         IsSpicy = spicy,
-        SortOrder = sort,
     };
 
     private static Guid DeterministicId(string name)
