@@ -15,4 +15,8 @@
     <ProjectReference Include="..\FoodDelivery.ServiceDefaults\FoodDelivery.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="FoodDelivery.Services.Tests" />
+  </ItemGroup>
+
 </Project>
