@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\FoodDelivery.Dispatch.Worker\FoodDelivery.Dispatch.Worker.csproj" />
     <ProjectReference Include="..\..\src\FoodDelivery.Orders.Api\FoodDelivery.Orders.Api.csproj" />
     <ProjectReference Include="..\..\src\FoodDelivery.Restaurants.Api\FoodDelivery.Restaurants.Api.csproj" />
   </ItemGroup>
