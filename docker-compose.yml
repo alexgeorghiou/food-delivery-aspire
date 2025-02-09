@@ -1,0 +1,92 @@
+# Runs the whole system without the Aspire AppHost (e.g. on a machine without the .NET SDK).
+# For development, prefer: dotnet run --project src/FoodDelivery.AppHost
+name: food-delivery
+
+x-dotnet-service: &dotnet-service
+  restart: unless-stopped
+  environment: &dotnet-env
+    ASPNETCORE_ENVIRONMENT: Production
+    ConnectionStrings__cache: redis:6379
+    ConnectionStrings__messaging: amqp://guest:guest@rabbitmq:5672
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.4-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:4.0-management-alpine
+    ports:
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      retries: 10
+
+  restaurants-api:
+    <<: *dotnet-service
+    build:
+      context: .
+      args:
+        PROJECT: FoodDelivery.Restaurants.Api
+    environment:
+      <<: *dotnet-env
+      ConnectionStrings__restaurantsdb: Host=postgres;Database=restaurantsdb;Username=postgres;Password=postgres
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  orders-api:
+    <<: *dotnet-service
+    build:
+      context: .
+      args:
+        PROJECT: FoodDelivery.Orders.Api
+    environment:
+      <<: *dotnet-env
+      ConnectionStrings__ordersdb: Host=postgres;Database=ordersdb;Username=postgres;Password=postgres
+      services__restaurants-api__http__0: http://restaurants-api:8080
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+      restaurants-api: { condition: service_started }
+
+  dispatch-worker:
+    <<: *dotnet-service
+    build:
+      context: .
+      args:
+        PROJECT: FoodDelivery.Dispatch.Worker
+    environment:
+      <<: *dotnet-env
+      Dispatch__SimulateCouriers: "true"
+    depends_on:
+      redis: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      - restaurants-api
+      - orders-api
+      - dispatch-worker
+
+volumes:
+  postgres-data:
