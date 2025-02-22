@@ -68,4 +68,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build image
-        run: docker build --build-arg PROJECT=${{ matrix.project }} -t food-delivery/${{ matrix.project }}:ci .
+        run: docker build --build-arg PROJECT=${{ matrix.project }} -t "food-delivery/$(echo '${{ matrix.project }}' | tr '[:upper:]' '[:lower:]'):ci" .
